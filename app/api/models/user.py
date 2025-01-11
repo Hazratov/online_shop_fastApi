@@ -1,7 +1,8 @@
 from datetime import datetime
 from enum import Enum as PyEnum
-from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey, Enum
-from sqlalchemy.orm import relationship
+from typing import Optional, List
+from sqlalchemy import String, Float, DateTime, text
+from sqlalchemy.orm import relationship, Mapped, mapped_column
 
 from app.core.models.base import Base
 
@@ -11,19 +12,18 @@ class UserRole(PyEnum):
 
 
 class User(Base):
-    __tablename__ = "users"
+    __tablename__ = "user"
 
-    username = Column(String(50), unique=True, index=True, nullable=False)
-    email = Column(String(100), unique=True, index=True, nullable=False)
-    hashed_password = Column(String(100), nullable=False)
-    first_name = Column(String(100))
-    last_name = Column(String(100))
-    role = Column(Enum(UserRole), default=UserRole.CUSTOMER)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    username: Mapped[str] = mapped_column(String(50), unique=True, index=True, nullable=False)
+    email: Mapped[str] = mapped_column(String(100), unique=True, index=True, nullable=False)
+    hashed_password: Mapped[str] = mapped_column(String(100), nullable=False)
+    first_name: Mapped[Optional[str]] = mapped_column(String(100))
+    last_name: Mapped[Optional[str]] = mapped_column(String(100))
+    role: Mapped[UserRole] = mapped_column(default=UserRole.CUSTOMER)
+    created_at: Mapped[datetime] = mapped_column(server_default=text("TIMEZONE('utc', now())"))
 
     # Relationships
-    orders = relationship("Order", back_populates="customer")
-    product_ratings = relationship("ProductRating", back_populates="user")
+    orders: Mapped[List["Order"]] = relationship(back_populates="customer")
 
 
 

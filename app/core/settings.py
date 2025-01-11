@@ -19,7 +19,7 @@ class Settings(BaseSettings):
     # JWT CREDENTIALS
     JWT_ENCRYPT_ALGORITHM: str
     JWT_SECRET_KEY: str
-    JWT_EXPIRE_SECONDS: int
+    JWT_EXPIRE_MINUTES: int
 
     model_config = SettingsConfigDict(env_file='.env')
 

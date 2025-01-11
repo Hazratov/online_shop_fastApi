@@ -1,21 +1,24 @@
 from datetime import datetime
-from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey, Enum
-from sqlalchemy.orm import relationship
+from typing import Optional, List
+from sqlalchemy import String, Float, DateTime, text
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.models.base import Base
 
-
 class Product(Base):
-    __tablename__ = "products"
+    __tablename__ = 'product'
 
-    name = Column(String(100), nullable=False)
-    description = Column(String(500))
-    price = Column(Float, nullable=False)
-    category = Column(String(50), nullable=False)
-    stock_quantity = Column(Integer, default=0)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    name: Mapped[str] = mapped_column(String(100), nullable=False)
+    description: Mapped[Optional[str]] = mapped_column(String(500))
+    price: Mapped[float] = mapped_column(Float, nullable=False)
+    category: Mapped[str] = mapped_column(String(50), nullable=False)
+    stock_quantity: Mapped[int] = mapped_column(default=0)
+    created_at: Mapped[datetime] = mapped_column(server_default=text("TIMEZONE('utc', now())"))
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime,
+        default=datetime.utcnow,
+        onupdate=datetime.utcnow
+    )
 
     # Relationships
-    order_details = relationship("OrderDetail", back_populates="product")
-    product_ratings = relationship("ProductRating", back_populates="product")
+    order_details: Mapped[List["OrderDetail"]] = relationship(back_populates="product")
