@@ -7,11 +7,13 @@ settings = get_settings()
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
-def create_access_token(data: dict, expires_delta: timedelta = timedelta(hours=1)) -> str:
+def create_access_token(
+    data: dict, secret_key: str, algorithm: str = "HS256", expires_minutes: int = 60
+) -> str:
     to_encode = data.copy()
-    expire = datetime.utcnow() + expires_delta
+    expire = datetime.now() + timedelta(minutes=expires_minutes)
     to_encode.update({"exp": expire})
-    return jwt.encode(to_encode, settings.JWT_SECRET_KEY, algorithm=settings.JWT_ENCRYPT_ALGORITHM)
+    return jwt.encode(to_encode, secret_key, algorithm=algorithm)
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:

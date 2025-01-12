@@ -21,7 +21,7 @@ async def register_user(
 
 @auth_router.post("/login", response_model=TokenResponse)
 async def login_user(
-        form_data: OAuth2PasswordRequestForm = Depends(), auth_controller: AuthController = Depends()
+        user_login: UserLogin, auth_controller: AuthController = Depends()
 ):
-    return await auth_controller.login_user(form_data)
+    return await auth_controller.login_user(user_login)
 
