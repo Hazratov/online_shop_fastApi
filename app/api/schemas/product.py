@@ -25,7 +25,6 @@ class ProductUpdate(BaseModel):
 class ProductResponse(ProductBase):
     id: int
     created_at: datetime
-    updated_at: datetime
 
     class Config:
-        from_attributes = True
+        orm_mode = True

@@ -3,6 +3,8 @@ from typing import List
 from sqlalchemy import String, Float, DateTime, ForeignKey, text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from enum import Enum
+
+
 from app.core.models.base import Base
 
 
@@ -22,5 +24,3 @@ class Order(Base):
 
     # Relationships
 
-    #customer: Mapped["User"] = relationship(back_populates="orders")
-    #order_details: Mapped[List["OrderDetail"]] = relationship(back_populates="order")

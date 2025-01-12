@@ -1,13 +1,8 @@
 from typing import Optional, Sequence
-
 from fastapi import Depends, HTTPException, status
-
-
 from app.api.models.user import User
 from app.api.repositories.user import UserRepository
-from app.api.schemas.auth import (
-    UserAlertSchema
-)
+from app.api.schemas.auth import (UserAlertSchema)
 from app.api.utils.security import decode_token
 from app.core.settings import get_settings, Settings
 

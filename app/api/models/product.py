@@ -3,6 +3,7 @@ from typing import Optional, List
 from sqlalchemy import String, Float, DateTime, text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+
 from app.core.models.base import Base
 
 class Product(Base):
@@ -16,4 +17,3 @@ class Product(Base):
     created_at: Mapped[datetime] = mapped_column(server_default=text("TIMEZONE('utc', now())"))
 
     # Relationships
-    order_details: Mapped[List["OrderDetail"]] = relationship(back_populates="product")
