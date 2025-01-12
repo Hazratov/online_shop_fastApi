@@ -1,8 +1,6 @@
 from sqlalchemy import Float, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from app.api.models.order import Order
-from app.api.models.product import Product
 from app.core.models.base import Base
 
 class OrderDetail(Base):
@@ -16,4 +14,3 @@ class OrderDetail(Base):
 
     # Relationships
     order: Mapped["Order"] = relationship(back_populates="order_detail")
-    product: Mapped["Product"] = relationship(back_populates="order_detail")

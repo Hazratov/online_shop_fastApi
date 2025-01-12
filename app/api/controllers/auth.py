@@ -45,7 +45,7 @@ class AuthController:
             )
 
         access_token = create_access_token(
-            data={"email": user.email, "role": user.role.value},
+            data={"email": user.email, "role": user.role.value, "sub": user.id},
             secret_key=self.settings.JWT_SECRET_KEY,
             expires_minutes=self.settings.ACCESS_TOKEN_EXPIRE_MINUTES,
             algorithm=self.settings.JWT_ENCRYPT_ALGORITHM

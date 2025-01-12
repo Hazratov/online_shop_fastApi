@@ -20,7 +20,7 @@ class Order(Base):
     order_date: Mapped[datetime] = mapped_column(server_default=text("TIMEZONE('utc', now())"))
     status: Mapped[OrderStatus] = mapped_column(default=OrderStatus.PENDING)
     total_amount: Mapped[float] = mapped_column(Float, nullable=False)
-    shipping_address: Mapped[str] = mapped_column(String(200), nullable=False)
 
     # Relationships
+    order_detail: Mapped[List["OrderDetail"]] = relationship(back_populates="order")
 

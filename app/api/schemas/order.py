@@ -1,24 +1,32 @@
-from datetime import datetime
+from pydantic import BaseModel, ConfigDict
 from typing import List
-
-from pydantic import Field, BaseModel
-from app.api.models.order import OrderStatus
-from app.api.schemas.ordering_detail import OrderDetailResponse, OrderDetailCreate
+from datetime import datetime
 
 
-class OrderBase(BaseModel):
-    shipping_address: str = Field(..., max_length=200)
+class OrderItemSchema(BaseModel):
+    product_id: int
+    quantity: int
 
-class OrderCreate(OrderBase):
-    order_details: List[OrderDetailCreate]
 
-class OrderResponse(OrderBase):
+class OrderCreateSchema(BaseModel):
+    items: List[OrderItemSchema]
+
+
+
+class OrderDetailOutSchema(BaseModel):
+    product_id: int
+    quantity: int
+    unit_price: float
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class OrderOutSchema(BaseModel):
     id: int
-    customer_id: int
-    order_date: datetime
-    status: OrderStatus
+    user_id: int
+    status: str
     total_amount: float
-    order_details: List[OrderDetailResponse]
+    created_at: datetime
+    order_details: List[OrderDetailOutSchema]
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
