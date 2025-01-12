@@ -12,14 +12,15 @@ class OrderStatus(Enum):
     COMPLETED = "completed"
 
 class Order(Base):
-    __tablename__ = "order"
+    __tablename__ = "orders"
 
-    customer_id: Mapped[int] = mapped_column(ForeignKey("user.id"), nullable=False)
+    customer_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
     order_date: Mapped[datetime] = mapped_column(server_default=text("TIMEZONE('utc', now())"))
     status: Mapped[OrderStatus] = mapped_column(default=OrderStatus.PENDING)
     total_amount: Mapped[float] = mapped_column(Float, nullable=False)
     shipping_address: Mapped[str] = mapped_column(String(200), nullable=False)
 
     # Relationships
-    customer: Mapped["User"] = relationship(back_populates="orders")
-    order_details: Mapped[List["OrderDetail"]] = relationship(back_populates="order")
+
+    #customer: Mapped["User"] = relationship(back_populates="orders")
+    #order_details: Mapped[List["OrderDetail"]] = relationship(back_populates="order")

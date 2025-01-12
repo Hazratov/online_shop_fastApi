@@ -12,7 +12,7 @@ class UserRole(PyEnum):
 
 
 class User(Base):
-    __tablename__ = "user"
+    __tablename__ = "users"
 
     username: Mapped[str] = mapped_column(String(50), unique=True, index=True, nullable=False)
     email: Mapped[str] = mapped_column(String(100), unique=True, index=True, nullable=False)
@@ -23,7 +23,7 @@ class User(Base):
     created_at: Mapped[datetime] = mapped_column(server_default=text("TIMEZONE('utc', now())"))
 
     # Relationships
-    orders: Mapped[List["Order"]] = relationship(back_populates="customer")
+    #orders: Mapped[List["Order"]] = relationship(back_populates="customer")
 
 
 

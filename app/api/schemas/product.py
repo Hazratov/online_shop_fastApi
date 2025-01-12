@@ -21,6 +21,7 @@ class ProductUpdate(BaseModel):
     category: Optional[str] = Field(None, max_length=50)
     stock_quantity: Optional[int] = Field(None, ge=0)
 
+
 class ProductResponse(ProductBase):
     id: int
     created_at: datetime
