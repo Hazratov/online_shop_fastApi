@@ -58,7 +58,7 @@ class OrderController:
                 product_id=item.product_id,
                 quantity=item.quantity,
                 unit_price=product.price,
-                # order_id not set yet, we do that after flush
+
             )
             details.append(detail)
 
