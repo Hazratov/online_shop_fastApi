@@ -24,7 +24,6 @@ class Settings(BaseSettings):
 
     model_config = SettingsConfigDict(env_file='.env')
 
-
 @cache
 def get_settings() -> Settings:
     return Settings()

@@ -7,7 +7,7 @@ from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 
 from app.api.repositories.auth import AuthRepository
 from app.api.schemas.auth import UserCreate, UserLogin, TokenResponse, EmailVerification, ForgotPassword
-from app.api.utils.auth import create_access_token, verify_password
+from app.api.utils.security import create_access_token, verify_password
 
 
 from app.core.settings import get_settings, Settings
@@ -46,10 +46,6 @@ class AuthController:
 
         access_token = create_access_token(
             data={"email": user.email, "role": user.role.value, "sub": user.id},
-            secret_key=self.settings.JWT_SECRET_KEY,
-            expires_minutes=self.settings.ACCESS_TOKEN_EXPIRE_MINUTES,
-            algorithm=self.settings.JWT_ENCRYPT_ALGORITHM
-
         )
         return TokenResponse(access_token=access_token, token_type="bearer")
 

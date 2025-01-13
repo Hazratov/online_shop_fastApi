@@ -12,7 +12,6 @@ class OrderCreateSchema(BaseModel):
     items: List[OrderItemSchema]
 
 
-
 class OrderDetailOutSchema(BaseModel):
     product_id: int
     quantity: int

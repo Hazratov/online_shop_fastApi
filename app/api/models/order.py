@@ -1,26 +1,21 @@
 from datetime import datetime
-from typing import List
-from sqlalchemy import String, Float, DateTime, ForeignKey, text
+from sqlalchemy import ForeignKey, Float, String, text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from enum import Enum
-
-
 from app.core.models.base import Base
 
-
-class OrderStatus(Enum):
-    PENDING = "pending"
-    PROCESSING = "processing"
-    COMPLETED = "completed"
 
 class Order(Base):
     __tablename__ = "orders"
 
-    customer_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
-    order_date: Mapped[datetime] = mapped_column(server_default=text("TIMEZONE('utc', now())"))
-    status: Mapped[OrderStatus] = mapped_column(default=OrderStatus.PENDING)
-    total_amount: Mapped[float] = mapped_column(Float, nullable=False)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    status: Mapped[str] = mapped_column(String(15), nullable=False)
+    total_amount: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
+    created_at: Mapped[datetime] = mapped_column(
+        server_default=text("TIMEZONE('utc', now())")
+    )
 
-    # Relationships
-    order_detail: Mapped[List["OrderDetail"]] = relationship(back_populates="order")
-
+    order_details: Mapped[list["OrderDetail"]] = relationship(
+        "OrderDetail",
+        back_populates="order",
+        cascade="all, delete-orphan",
+    )

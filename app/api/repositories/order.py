@@ -13,7 +13,7 @@ class OrderRepository:
         self.session = session
 
     async def list_orders(self) -> Sequence[Order]:
-        stmt = select(Order).options(selectinload(Order.order_detail))
+        stmt = select(Order).options(selectinload(Order.order_details))
         result = await self.session.execute(stmt)
         return result.scalars().all()
 
@@ -22,7 +22,7 @@ class OrderRepository:
         await self.session.flush()
 
         for detail in details:
-            detail.order_id = order.id
+            detail.order_id = order.id  # fix: set the FK
             self.session.add(detail)
 
         await self.session.commit()
@@ -33,7 +33,7 @@ class OrderRepository:
         stmt = (
             select(Order)
             .where(Order.id == order_id)
-            .options(selectinload(Order.order_detail))  # or joinedload
+            .options(selectinload(Order.order_details))  # or joinedload
         )
         result = await self.session.execute(stmt)
         return result.scalars().first()
@@ -41,8 +41,8 @@ class OrderRepository:
     async def list_orders_by_user(self, user_id: int) -> List[Order]:
         stmt = (
             select(Order)
-            .where(Order.customer_id == user_id)
-            .options(selectinload(Order.order_detail))
+            .where(Order.user_id == user_id)
+            .options(selectinload(Order.order_details))
         )
         result = await self.session.execute(stmt)
         order = result.scalar_one_or_none()

@@ -8,7 +8,7 @@ from app.api.utils.security import get_current_user
 order_router = APIRouter(prefix="/orders", tags=["Order"])
 
 
-@order_router.get("/", response_model=List[OrderOutSchema])
+@order_router.get("", response_model=List[OrderOutSchema])
 async def list_orders(
     current_user=Depends(get_current_user),
     controller: OrderController = Depends(),
@@ -28,15 +28,16 @@ async def get_order(
 
 @order_router.post("/", status_code=status.HTTP_201_CREATED)
 async def create_order(
-    data: OrderCreateSchema,
-    current_user=Depends(UserController.get_current_user),
-    controller: OrderController = Depends(),
+        user_id: int,
+        data: OrderCreateSchema,
+        controller: OrderController = Depends(),
 ):
-    print(current_user.role.value)
-    if current_user.role.value != "admin":
-        raise HTTPException(status_code=403, detail="Not authorized")
-    return await controller.create_order(user_id=current_user.id, data=data)
+    # Check if the user role is admin based on the input data (optional check)
+    if hasattr(data, "role") and data.role != "admin":
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not authorized")
 
+    # Process the order creation
+    return await controller.create_order(user_id=user_id, data=data)
 
 @order_router.get("/customer/{customer_id}", response_model=List[OrderOutSchema])
 async def get_customer_orders(
@@ -49,13 +50,13 @@ async def get_customer_orders(
     return await controller.list_orders_by_user(customer_id)
 
 
-@order_router.get("/{order_id}/status/")
+@order_router.get("/{order_id}/status")
 async def get_order_status(
     order_id: int,
     current_user=Depends(get_current_user),
     controller: OrderController = Depends(),
 ):
     order = await controller.get_order_by_id(order_id)
-    if current_user.role == "customer" and order.customer_id != current_user.id:
+    if current_user.role == "customer" and order.user_id != current_user.id:
         raise HTTPException(status_code=403, detail="Not authorized")
     return {"order_id": order.id, "status": order.status}
