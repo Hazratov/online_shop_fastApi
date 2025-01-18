@@ -10,7 +10,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from app.api.controllers.auth import AuthController
 
 auth_router = APIRouter()
-
+    
 
 @auth_router.post("/register", status_code=201)
 async def register_user(

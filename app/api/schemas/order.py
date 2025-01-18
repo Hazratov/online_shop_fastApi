@@ -1,31 +1,24 @@
-from pydantic import BaseModel, ConfigDict
-from typing import List
+from pydantic import BaseModel, Field
+from typing import Optional, List
 from datetime import datetime
 
 
-class OrderItemSchema(BaseModel):
-    product_id: int
-    quantity: int
-
-
-class OrderCreateSchema(BaseModel):
-    items: List[OrderItemSchema]
-
-
-class OrderDetailOutSchema(BaseModel):
+class OrderDetailCreate(BaseModel):
     product_id: int
     quantity: int
     unit_price: float
+    subtotal: float
 
-    model_config = ConfigDict(from_attributes=True)
-
-
-class OrderOutSchema(BaseModel):
-    id: int
+class OrderCreate(BaseModel):
     user_id: int
     status: str
     total_amount: float
-    created_at: datetime
-    order_details: List[OrderDetailOutSchema]
+    details: List[OrderDetailCreate]
 
-    model_config = ConfigDict(from_attributes=True)
+
+class OrderResponse(OrderDetailCreate):
+    id: int = Field(..., description="Order ID")
+    created_at: datetime = Field(..., description="Order creation time")
+
+    class Config:
+        orm_mode = True

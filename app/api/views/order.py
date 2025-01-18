@@ -1,62 +1,55 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, Path, Body, status
 from typing import List
+from fastapi.security import OAuth2PasswordBearer
+
 from app.api.controllers.order import OrderController
-from app.api.controllers.user import UserController
-from app.api.schemas.order import OrderCreateSchema, OrderOutSchema
-from app.api.utils.security import get_current_user
+from app.api.schemas.order import OrderDetailCreate, OrderResponse
+
+# OAuth2PasswordBearer token
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
 order_router = APIRouter(prefix="/orders", tags=["Order"])
 
 
-@order_router.get("", response_model=List[OrderOutSchema])
-async def list_orders(
-    current_user=Depends(get_current_user),
-    controller: OrderController = Depends(),
+@order_router.get("/", response_model=List[OrderResponse])
+async def get_all_orders(
+    token: str = Depends(oauth2_scheme),
+    controller: OrderController = Depends()
 ):
-    if current_user.role != "admin":
-        raise HTTPException(status_code=403, detail="Not authorized")
-    return await controller.list_orders()
+    return await controller.get_all_orders()
 
 
-@order_router.get("/{order_id}")
-async def get_order(
-    order_id: int,
-    controller: OrderController = Depends(),
-):
-    return await controller.get_order_details(order_id)
-
-
-@order_router.post("/", status_code=status.HTTP_201_CREATED)
+@order_router.post("/", response_model=OrderResponse, status_code=status.HTTP_201_CREATED)
 async def create_order(
-        user_id: int,
-        data: OrderCreateSchema,
-        controller: OrderController = Depends(),
-):
-    # Check if the user role is admin based on the input data (optional check)
-    if hasattr(data, "role") and data.role != "admin":
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not authorized")
-
-    # Process the order creation
-    return await controller.create_order(user_id=user_id, data=data)
-
-@order_router.get("/customer/{customer_id}", response_model=List[OrderOutSchema])
-async def get_customer_orders(
-    customer_id: int,
-    current_user=Depends(get_current_user),
+    order_data: OrderDetailCreate = Body(...),
+    token: str = Depends(oauth2_scheme),
     controller: OrderController = Depends(),
 ):
-    if current_user.role == "customer" and current_user.id != customer_id:
-        raise HTTPException(status_code=403, detail="Not authorized")
-    return await controller.list_orders_by_user(customer_id)
+    return await controller.create_order(order_data)
 
 
-@order_router.get("/{order_id}/status")
+@order_router.get("/{order_id}", response_model=OrderResponse)
+async def get_order_by_id(
+    order_id: int = Path(...),
+    token: str = Depends(oauth2_scheme),
+    controller: OrderController = Depends(),
+):
+    return await controller.get_order_by_id(order_id)
+
+
+@order_router.get("/customer/{customer_id}", response_model=List[OrderResponse])
+async def get_orders_by_customer_id(
+    customer_id: int = Path(...),
+    token: str = Depends(oauth2_scheme),
+    controller: OrderController = Depends(),
+):
+    return await controller.get_orders_by_customer_id(customer_id)
+
+
+@order_router.get("/{order_id}/status", response_model=str)
 async def get_order_status(
-    order_id: int,
-    current_user=Depends(get_current_user),
+    order_id: int = Path(...),
+    token: str = Depends(oauth2_scheme),
     controller: OrderController = Depends(),
 ):
-    order = await controller.get_order_by_id(order_id)
-    if current_user.role == "customer" and order.user_id != current_user.id:
-        raise HTTPException(status_code=403, detail="Not authorized")
-    return {"order_id": order.id, "status": order.status}
+    return await controller.get_order_status(order_id)

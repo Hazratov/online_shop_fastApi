@@ -23,8 +23,8 @@ class User(Base):
     is_active: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     created_at: Mapped[datetime] = mapped_column(server_default=text("TIMEZONE('utc', now())"))
 
-    # Relationships
-    #orders: Mapped[List["Order"]] = relationship(back_populates="customer")
+
+
 
 
 

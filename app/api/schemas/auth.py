@@ -13,7 +13,6 @@ class UserCreate(BaseModel):
     role: UserRole = UserRole.CUSTOMER
 
 class UserAlertSchema(BaseModel):
-    id: int
     email: str
     first_name: str
     last_name: str

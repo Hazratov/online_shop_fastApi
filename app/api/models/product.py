@@ -16,4 +16,4 @@ class Product(Base):
     stock_quantity: Mapped[int] = mapped_column(default=0)
     created_at: Mapped[datetime] = mapped_column(server_default=text("TIMEZONE('utc', now())"))
 
-    # Relationships
+
