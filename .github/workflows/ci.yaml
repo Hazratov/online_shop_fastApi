@@ -54,4 +54,4 @@ jobs:
       # Run tests
       - name: Run tests
         run: |
-          pytest --cov=app tests/
+          pytest tests/
