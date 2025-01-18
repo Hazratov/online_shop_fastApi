@@ -48,7 +48,7 @@ jobs:
       # Set up environment variables for tests
       - name: Set up environment variables
         run: |
-          echo "DATABASE_URL=postgresql+asyncpg://test_user:test_password@localhost:5432/test_db" >> $GITHUB_ENV
+          echo "DATABASE_URL=postgresql+asyncpg://postgres:1@localhost:5432/shop" >> $GITHUB_ENV
 
       # Run migrations (Alembic with async)
       - name: Run async database migrations
