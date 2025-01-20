@@ -15,7 +15,7 @@ def create_app() -> FastAPI:
         description=settings.PROJECT_DESCRIPTION,
         version=settings.PROJECT_VERSION,
     )
-    app_.include_router(auth_router, prefix="/auth", tags=["Authoration"])
+    app_.include_router(auth_router, prefix="/auth", tags=["Authorization"])
     app_.include_router(user_router, prefix="/api", tags=["User"])
     app_.include_router(product_router, prefix="/api", tags=["Product"])
     app_.include_router(order_router, prefix="/api", tags=["Order"])

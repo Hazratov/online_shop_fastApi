@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import Optional, List
+from typing import List
 from datetime import datetime
 
 
@@ -9,16 +9,19 @@ class OrderDetailCreate(BaseModel):
     unit_price: float
     subtotal: float
 
+
 class OrderCreate(BaseModel):
-    user_id: int
     status: str
     total_amount: float
     details: List[OrderDetailCreate]
 
 
-class OrderResponse(OrderDetailCreate):
+class OrderResponse(BaseModel):
     id: int = Field(..., description="Order ID")
-    created_at: datetime = Field(..., description="Order creation time")
+    status: str
+    total_amount: float
+    created_at: datetime
+    details: List[OrderDetailCreate]
 
     class Config:
         orm_mode = True

@@ -20,7 +20,7 @@ class UserController:
         payload = decode_token(token, self.settings.JWT_SECRET_KEY, "HS256")
         email = payload.get("email")
         if not email:
-            raise HTTPException(status_code=401, detail="Invalid token")
+            raise HTTPException(status_code=401, detail="Invalid Email")
         user = await self.user_repo.get_user_by_email(email)
         if not user:
             raise HTTPException(status_code=401, detail="User not found")
