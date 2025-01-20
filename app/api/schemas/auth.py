@@ -40,14 +40,3 @@ class TokenResponse(BaseModel):
     access_token: str
     token_type: str
 
-
-class EmailVerification(BaseModel):
-    token: str
-
-
-class ForgotPassword(BaseModel):
-    email: str
-
-class ResetPassword(BaseModel):
-    token: str
-    new_password: str
