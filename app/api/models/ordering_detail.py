@@ -14,7 +14,6 @@ class OrderDetail(Base):
     subtotal: Mapped[int] = mapped_column(Float, nullable=False)
     order = relationship("Order", back_populates="order_details")
 
-    # Correct relationship
     order: Mapped["Order"] = relationship(
         "Order",
         back_populates="order_details"

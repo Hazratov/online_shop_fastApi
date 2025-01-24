@@ -1,12 +1,11 @@
 from fastapi import Depends, HTTPException, status
-
 from passlib.hash import bcrypt
 import jwt
 
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 
 from app.api.repositories.auth import AuthRepository
-from app.api.schemas.auth import UserCreate, UserLogin, TokenResponse, EmailVerification, ForgotPassword
+from app.api.schemas.auth import UserCreate, UserLogin, TokenResponse
 from app.api.utils.security import create_access_token, verify_password
 
 
